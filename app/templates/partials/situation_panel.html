@@ -1,0 +1,20 @@
+{% if flashpoints %}
+{% for fp in flashpoints %}
+<div class="fp-card fp-{{ fp.status }}" data-flashpoint="{{ fp.name }}" onclick="focusFlashpointFromCard('{{ fp.name }}')">
+    <div class="fp-card-header">
+        <span class="fp-name">{{ fp.name }}</span>
+        <span class="status-badge status-{{ fp.status }}">{{ fp.status | upper }}</span>
+    </div>
+    <div class="fp-card-body">
+        <span class="fp-score">{{ "%.0f" | format(fp.score) }}</span>
+        <div class="fp-card-detail">
+            <span class="fp-events-count">{{ fp.event_count_24h }} events/24h</span>
+            <span class="fp-time" data-time="{{ fp.last_event_time or '' }}">{{ '' if fp.last_event_time else 'No events' }}</span>
+        </div>
+        <svg class="sparkline" data-values="{{ fp.event_count_7d | join(',') }}" width="60" height="20"></svg>
+    </div>
+</div>
+{% endfor %}
+{% else %}
+<div class="empty-state"><p>Flashpoint data loading. Scores update hourly.</p></div>
+{% endif %}

@@ -1,0 +1,5 @@
+{% for event in events %}
+{% include "partials/event_card.html" %}
+{% else %}
+<p class="muted">No events for this power yet.</p>
+{% endfor %}

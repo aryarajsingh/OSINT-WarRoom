@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- === ROW 1 LEFT: Conflict Map === -->
+<div class="panel" id="panel-map">
+    <div class="panel-header">
+        <h2>Conflict Map</h2>
+        <span class="muted small" id="map-count">Loading...</span>
+        <button class="btn-fullscreen" onclick="toggleFullscreen('panel-map')" title="Fullscreen">&#x26F6;</button>
+    </div>
+    <div id="map-filter-bar" class="map-filter-bar"></div>
+    <div id="conflict-map" style="position:relative;">
+        <div id="map-fp-overlay" class="map-fp-overlay"></div>
+    </div>
+    <div class="map-legend">
+        <span class="map-legend-item" data-layer="conflict" title="Toggle conflict events"><span class="map-legend-dot" style="background:#ff8800"></span> Conflict <span class="layer-count" id="layer-count-conflict">0</span></span>
+        <span class="map-legend-item" data-layer="thermal" title="Toggle thermal hotspots"><span class="map-legend-dot" style="background:#ff4444"></span> Thermal <span class="layer-count" id="layer-count-thermal">0</span></span>
+        <span class="map-legend-item" data-layer="aviation" title="Toggle military aviation"><span class="map-legend-dot" style="background:#4488ff"></span> Aviation <span class="layer-count" id="layer-count-aviation">0</span></span>
+        <span class="map-legend-item" data-layer="seismic" title="Toggle seismic activity"><span class="map-legend-dot" style="background:#ffcc00"></span> Seismic <span class="layer-count" id="layer-count-seismic">0</span></span>
+        <span class="map-legend-item" data-layer="news" title="Toggle news events"><span class="map-legend-dot" style="background:#ff6644"></span> News <span class="layer-count" id="layer-count-news">0</span></span>
+    </div>
+</div>
+
+<!-- Vertical drag: Map ↔ Breaking Intel -->
+<div class="drag-handle drag-v-row1" data-direction="col" data-target="row1"></div>
+
+<!-- === ROW 1 RIGHT: Breaking Intel === -->
+<div class="panel" id="panel-1"
+     hx-ext="sse"
+     sse-connect="/sse/feed">
+    <div class="panel-header">
+        <h2>Breaking Intel</h2>
+        <div class="tab-bar" id="feed-tabs">
+            <button class="tab active" data-filter-region="all" data-filter-priority="" hx-get="/partials/feed?region=all" hx-target="#feed-list" hx-swap="innerHTML">All</button>
+            <button class="tab tab-priority" data-filter-region="" data-filter-priority="high" hx-get="/partials/feed?min_priority=high" hx-target="#feed-list" hx-swap="innerHTML">High+</button>
+            <button class="tab" data-filter-region="india" data-filter-priority="" hx-get="/partials/feed?region=india" hx-target="#feed-list" hx-swap="innerHTML">India</button>
+            <button class="tab" data-filter-region="middle_east" data-filter-priority="" hx-get="/partials/feed?region=middle_east" hx-target="#feed-list" hx-swap="innerHTML">MidEast</button>
+            <button class="tab" data-filter-region="asia_pacific" data-filter-priority="" hx-get="/partials/feed?region=asia_pacific" hx-target="#feed-list" hx-swap="innerHTML">AsiaPac</button>
+            <button class="tab" data-filter-region="europe" data-filter-priority="" hx-get="/partials/feed?region=europe" hx-target="#feed-list" hx-swap="innerHTML">Europe</button>
+            <button class="tab" data-filter-region="africa" data-filter-priority="" hx-get="/partials/feed?region=africa" hx-target="#feed-list" hx-swap="innerHTML">Africa</button>
+        </div>
+        <button class="btn-fullscreen" onclick="toggleFullscreen('panel-1')" title="Fullscreen">&#x26F6;</button>
+    </div>
+    <div id="feed-new-bar" class="new-events-bar hidden" onclick="resetFeedFilter()"></div>
+    <div id="feed-list" class="event-list">
+        {% for event in feed_events %}
+        {% include "partials/event_card.html" %}
+        {% else %}
+        <div class="empty-state"><p>Collecting intelligence data...</p></div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Horizontal drag: Row 1 ↔ Row 2 -->
+<div class="drag-handle drag-h-main" data-direction="row" data-target="main"></div>
+
+<!-- === ROW 2 CONTAINER === -->
+<div id="row2-container">
+
+    <!-- Situation Board -->
+    <div class="panel" id="panel-4" hx-trigger="revealed, every 120s" hx-get="/partials/situation" hx-swap="innerHTML" hx-target="#situation-content">
+        <div class="panel-header">
+            <h2>Situation Board</h2>
+            <button class="btn-fullscreen" onclick="toggleFullscreen('panel-4')" title="Fullscreen">&#x26F6;</button>
+        </div>
+        <div id="situation-content" class="event-list">
+            {% for fp in flashpoints %}
+            <div class="fp-card fp-{{ fp.status }}" data-flashpoint="{{ fp.name }}" onclick="focusFlashpointFromCard('{{ fp.name }}')">
+                <div class="fp-card-header">
+                    <span class="fp-name">{{ fp.name }}</span>
+                    <span class="status-badge status-{{ fp.status }}">{{ fp.status | upper }}</span>
+                </div>
+                <div class="fp-card-body">
+                    <span class="fp-score">{{ "%.0f" | format(fp.score) }}</span>
+                    <div class="fp-card-detail">
+                        <span class="fp-events-count">{{ fp.event_count_24h }} events/24h</span>
+                        <span class="fp-time" data-time="{{ fp.last_event_time or '' }}">{{ 'No events' if not fp.last_event_time else '' }}</span>
+                    </div>
+                    <svg class="sparkline" data-values="{{ fp.event_count_7d | join(',') }}" width="60" height="20"></svg>
+                </div>
+            </div>
+            {% else %}
+            <div class="empty-state"><p>Flashpoint data loading...</p></div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Vertical drag: Situation ↔ India -->
+    <div class="drag-handle drag-v-r2" data-direction="col" data-target="row2" data-index="0"></div>
+
+    <!-- India Command -->
+    <div class="panel" id="panel-2">
+        <div class="panel-header">
+            <h2>India Command</h2>
+            <div class="tab-bar">
+                <button class="tab active" hx-get="/partials/india?category=" hx-target="#india-list" hx-swap="innerHTML">All</button>
+                <button class="tab" hx-get="/partials/india?category=defence" hx-target="#india-list" hx-swap="innerHTML">Defence</button>
+                <button class="tab" hx-get="/partials/india?category=lac" hx-target="#india-list" hx-swap="innerHTML">LAC</button>
+                <button class="tab" hx-get="/partials/india?category=diplomacy" hx-target="#india-list" hx-swap="innerHTML">Diplomacy</button>
+                <button class="tab" hx-get="/partials/india?category=space" hx-target="#india-list" hx-swap="innerHTML">Space</button>
+                <button class="tab" hx-get="/partials/india?category=nuclear" hx-target="#india-list" hx-swap="innerHTML">Nuclear</button>
+            </div>
+            <button class="btn-fullscreen" onclick="toggleFullscreen('panel-2')" title="Fullscreen">&#x26F6;</button>
+        </div>
+        <div id="india-list" class="event-list"
+             hx-get="/partials/india?category=" hx-trigger="every 120s" hx-swap="innerHTML">
+            {% for event in india_events %}
+            {% include "partials/event_card.html" %}
+            {% else %}
+            <div class="empty-state"><p>No India events yet.</p></div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Vertical drag: India ↔ Powers -->
+    <div class="drag-handle drag-v-r2" data-direction="col" data-target="row2" data-index="1"></div>
+
+    <!-- Great Powers -->
+    <div class="panel" id="panel-3">
+        <div class="panel-header">
+            <h2>Great Powers</h2>
+            <div class="tab-bar">
+                <button class="tab active" hx-get="/partials/powers?country=us" hx-target="#powers-list" hx-swap="innerHTML">US</button>
+                <button class="tab" hx-get="/partials/powers?country=china" hx-target="#powers-list" hx-swap="innerHTML">China</button>
+                <button class="tab" hx-get="/partials/powers?country=russia" hx-target="#powers-list" hx-swap="innerHTML">Russia</button>
+                <button class="tab" hx-get="/partials/powers?country=eu_nato" hx-target="#powers-list" hx-swap="innerHTML">EU/NATO</button>
+            </div>
+            <button class="btn-fullscreen" onclick="toggleFullscreen('panel-3')" title="Fullscreen">&#x26F6;</button>
+        </div>
+        <div id="powers-list" class="event-list"
+             hx-get="/partials/powers?country=us" hx-trigger="every 120s" hx-swap="innerHTML">
+            {% for event in powers_events %}
+            {% include "partials/event_card.html" %}
+            {% else %}
+            <div class="empty-state"><p>No events for this power yet.</p></div>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+
+<!-- Flashpoint geo data for JS -->
+<script>var FLASHPOINT_GEO = {{ flashpoint_geo_json | safe }};</script>
+
+{% endblock %}

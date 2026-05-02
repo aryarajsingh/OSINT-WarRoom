@@ -1,0 +1,5 @@
+{% for event in events %}
+{% include "partials/event_card.html" %}
+{% else %}
+<p class="muted">No India events yet. Indian defence feeds will populate shortly.</p>
+{% endfor %}

@@ -1,0 +1,18 @@
+services:
+  warroom:
+    build: .
+    container_name: osint-warroom
+    ports:
+      - "0.0.0.0:8000:8000"
+    volumes:
+      - ./data:/app/data
+      - ./app:/app/app
+    env_file:
+      - .env
+    restart: unless-stopped
+    networks:
+      - warroom-net
+
+networks:
+  warroom-net:
+    driver: bridge

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSINT War Room</title>
+    <meta name="referrer" content="no-referrer">
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/leaflet.min.css">
+</head>
+<body>
+    <!-- Top bar -->
+    <header class="topbar">
+        <div class="topbar-left">
+            <span class="logo">WAR ROOM</span>
+            <span class="status-dot pulse"></span>
+            <span class="status-text" id="status-text">LIVE</span>
+        </div>
+        <div class="topbar-center">
+            <input type="search" id="search-input" placeholder="Search intel... ( / )"
+                   hx-get="/partials/search"
+                   hx-trigger="keyup changed delay:300ms"
+                   hx-target="#search-results"
+                   hx-include="this"
+                   name="q"
+                   autocomplete="off">
+            <div id="search-results" class="search-results"></div>
+        </div>
+        <div class="topbar-right">
+            <div class="refresh-bar" id="refresh-bar"></div>
+            <kbd class="kbd-hint">m 1-4</kbd>
+            <span class="muted small">panels</span>
+        </div>
+    </header>
+
+    <!-- Alert banner (SSE-driven) -->
+    <div id="alert-banner" class="alert-banner hidden"
+         hx-ext="sse"
+         sse-connect="/sse/alerts"
+         sse-swap="alert"
+         hx-swap="innerHTML">
+    </div>
+
+    <!-- Main grid -->
+    <main class="dashboard">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Scripts (all local, no CDN) -->
+    <script src="/static/htmx.min.js"></script>
+    <script src="/static/htmx-sse.js"></script>
+    <script src="/static/leaflet.min.js"></script>
+    <script src="/static/sparkline.js"></script>
+    <script src="/static/dashboard.js"></script>
+</body>
+</html>

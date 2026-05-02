@@ -1,0 +1,5 @@
+{% for event in events %}
+{% include "partials/event_card.html" %}
+{% else %}
+<p class="muted">No events yet. Data will appear after the first collection cycle.</p>
+{% endfor %}

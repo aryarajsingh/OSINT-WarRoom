@@ -1,0 +1,48 @@
+# === Environment & secrets ===
+.env
+.env.*
+!.env.example
+
+# === Local IDE / agent state ===
+.claude/
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# === OS metadata ===
+.DS_Store
+Thumbs.db
+nul
+
+# === Python build & cache ===
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# === Virtual environments ===
+venv/
+.venv/
+env/
+ENV/
+
+# === Runtime data ===
+data/*.db
+data/*.db-wal
+data/*.db-shm
+*.log
+
+# === Keys / certs ===
+*.key
+*.pem
+*.crt
+secrets/

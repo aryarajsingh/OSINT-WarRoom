@@ -1,0 +1,35 @@
+<article class="event-card {{ 'unread' if not event.is_read else '' }} priority-{{ event.priority }}"
+         id="event-{{ event.id }}"
+         hx-post="/events/{{ event.id }}/read"
+         hx-trigger="click once"
+         hx-swap="none">
+    <div class="priority-bar priority-bg-{{ event.priority }}"></div>
+    <div class="event-content">
+        <div class="event-meta">
+            <span class="source-badge tier-{{ event.source_tier | lower }}">{{ event.source_tier }}</span>
+            <span class="source-name">{{ event.source }}</span>
+            <span class="event-time" data-time="{{ event.created_at }}">{{ event.created_at }}</span>
+        </div>
+        <h3 class="event-title">
+            <a href="{{ event.url }}" target="_blank" rel="noopener noreferrer">{{ event.title }}</a>
+        </h3>
+        {% if event.summary %}
+        <p class="event-summary">{{ event.summary }}</p>
+        <span class="read-more" onclick="event.stopPropagation(); toggleSummary(this)">more</span>
+        {% endif %}
+        <div class="event-tags">
+            {% if event.region %}
+            <span class="tag tag-region">{{ event.region }}</span>
+            {% endif %}
+            {% if event.flashpoint %}
+            <span class="tag tag-flashpoint">{{ event.flashpoint }}</span>
+            {% endif %}
+            {% if event.goldstein is not none %}
+            <span class="tag tag-goldstein {{ 'negative' if event.goldstein < 0 else 'positive' }}">G: {{ "%.1f" | format(event.goldstein) }}</span>
+            {% endif %}
+            {% if event.fatalities > 0 %}
+            <span class="tag tag-fatalities">{{ event.fatalities }} fatalities</span>
+            {% endif %}
+        </div>
+    </div>
+</article>

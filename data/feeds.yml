@@ -1,0 +1,172 @@
+# === OSINT War Room — RSS Feed Configuration ===
+# tier: "hot" (2 min) or "warm" (10 min)
+# region: india, middle_east, asia_pacific, europe, global
+# category: defence, procurement, lac, diplomacy, analysis, conflict, geopolitics
+
+# === WIRE SERVICES (Hot Tier) ===
+wire_services:
+  - url: "https://www.aljazeera.com/xml/rss/all.xml"
+    name: "Al Jazeera"
+    tier: hot
+    region: global
+  - url: "https://feeds.bbci.co.uk/news/world/rss.xml"
+    name: "BBC World"
+    tier: hot
+    region: global
+  - url: "https://www.timesofisrael.com/feed/"
+    name: "Times of Israel"
+    tier: hot
+    region: middle_east
+
+# === INDIA — Government ===
+india_government:
+  - url: "https://www.pib.gov.in/ViewRss.aspx?reg=3&lang=2"
+    name: "PIB Defence"
+    tier: warm
+    region: india
+    category: defence
+  - url: "https://www.pib.gov.in/ViewRss.aspx?reg=0&lang=2"
+    name: "PIB All"
+    tier: warm
+    region: india
+
+# === INDIA — Defence Media ===
+india_defence_media:
+  - url: "https://indianexpress.com/section/india/feed/"
+    name: "Indian Express India"
+    tier: warm
+    region: india
+  - url: "https://feeds.feedburner.com/ndtvnews-india-news"
+    name: "NDTV India"
+    tier: warm
+    region: india
+  - url: "https://www.livefistdefence.com/feed/"
+    name: "Livefist Defence"
+    tier: warm
+    region: india
+    category: defence
+  - url: "https://bharatshakti.in/feed/"
+    name: "Bharat Shakti"
+    tier: warm
+    region: india
+    category: defence
+
+# === INDIA — Think Tanks ===
+india_think_tanks:
+  - url: "https://idsa.in/rss"
+    name: "MP-IDSA"
+    tier: warm
+    region: india
+    category: analysis
+  - url: "https://carnegieindia.org/rss"
+    name: "Carnegie India"
+    tier: warm
+    region: india
+    category: analysis
+
+# === US Defence ===
+us_defence:
+  - url: "https://www.defenseone.com/rss/all/"
+    name: "Defense One"
+    tier: warm
+    region: global
+    category: defence
+  - url: "https://breakingdefense.com/feed/"
+    name: "Breaking Defense"
+    tier: warm
+    region: global
+    category: defence
+  - url: "https://warontherocks.com/feed/"
+    name: "War on the Rocks"
+    tier: warm
+    region: global
+    category: analysis
+  - url: "https://news.usni.org/feed"
+    name: "USNI News"
+    tier: warm
+    region: global
+    category: defence
+  - url: "https://www.militarytimes.com/arc/outboundfeeds/rss/?outputType=xml"
+    name: "Military Times"
+    tier: warm
+    region: global
+    category: defence
+  - url: "https://www.thedrive.com/the-war-zone/feed"
+    name: "The War Zone"
+    tier: warm
+    region: global
+    category: defence
+
+# === China Watch ===
+china_watch:
+  - url: "https://www.scmp.com/rss/4/feed"
+    name: "SCMP Asia"
+    tier: warm
+    region: asia_pacific
+  - url: "https://jamestown.org/feed/"
+    name: "Jamestown Foundation"
+    tier: warm
+    region: global
+    category: analysis
+  - url: "https://thediplomat.com/feed/"
+    name: "The Diplomat"
+    tier: warm
+    region: asia_pacific
+    category: analysis
+
+# === Middle East ===
+middle_east:
+  - url: "https://www.al-monitor.com/rss"
+    name: "Al-Monitor"
+    tier: warm
+    region: middle_east
+  - url: "https://www.middleeasteye.net/rss"
+    name: "Middle East Eye"
+    tier: warm
+    region: middle_east
+  - url: "https://www.bbc.co.uk/news/world/middle_east/rss.xml"
+    name: "BBC Middle East"
+    tier: warm
+    region: middle_east
+
+# === Conflict / General Geopolitics ===
+geopolitics:
+  - url: "https://www.foreignaffairs.com/rss.xml"
+    name: "Foreign Affairs"
+    tier: warm
+    region: global
+    category: analysis
+  - url: "https://www.csis.org/rss.xml"
+    name: "CSIS"
+    tier: warm
+    region: global
+    category: analysis
+  - url: "https://www.rand.org/content/rand/blog.xml"
+    name: "RAND"
+    tier: warm
+    region: global
+    category: analysis
+  # RUSI and IISS no longer provide RSS feeds (removed)
+
+# === Travel Advisories ===
+travel_advisories:
+  - url: "https://www.gov.uk/foreign-travel-advice.atom"
+    name: "UK FCDO Travel"
+    tier: warm
+    region: global
+  - url: "https://www.smartraveller.gov.au/api/feeds/rss"
+    name: "Australia DFAT Travel"
+    tier: warm
+    region: global
+
+# === Europe / Russia-Ukraine ===
+europe:
+  - url: "https://www.understandingwar.org/rss.xml"
+    name: "ISW"
+    tier: warm
+    region: europe
+    category: analysis
+  - url: "https://www.bbc.co.uk/news/world/europe/rss.xml"
+    name: "BBC Europe"
+    tier: warm
+    region: europe
